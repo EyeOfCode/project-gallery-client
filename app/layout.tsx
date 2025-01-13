@@ -17,8 +17,6 @@ export const metadata: Metadata = {
   description: 'Pre-test Gallery',
   icons: {
     icon: '/assets/favicon.ico',
-    // shortcut: "/assets/favicon.ico",
-    // apple: "/assets/apple-icon.png",
   },
 };
 
