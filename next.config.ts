@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  pageExtensions: ["tsx", "ts", "jsx", "js"],
+  async rewrites() {
+    return [
+      {
+        source: "/",
+        destination: "/home",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
