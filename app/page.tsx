@@ -5,33 +5,27 @@ import { ImageData } from './interfaces/image.interface';
 import { TagsComponent } from './components/tags';
 import { mapTagsData } from './utils/map_tags';
 import { GalleryComponent } from './components/gallery';
+import { GetListTags } from './service/tags.service';
 
 export default function Home() {
   const [images, setImages] = useState<ImageData[]>([]);
   const [displayedImages, setDisplayedImages] = useState<ImageData[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
   const IMAGES_PER_PAGE = parseInt(
     process.env.NEXT_PUBLIC_IMAGES_PER_PAGE || '12',
   );
-  const tags = [
-    'nature',
-    'city',
-    'food',
-    'travel',
-    'art',
-    'people',
-    'technology',
-    'animals',
-  ];
 
   useEffect(() => {
-    const initialData = mapTagsData(tags, 50);
-    setImages(initialData);
-    setDisplayedImages(initialData.slice(0, IMAGES_PER_PAGE));
+    fetchTags();
   }, []);
+
+  useEffect(() => {
+    console.log(tags);
+  }, [tags]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -50,6 +44,24 @@ export default function Home() {
 
     return () => observer.disconnect();
   }, [loading, selectedTag, images]);
+
+  const fetchTags = async () => {
+    const defaultTags = [
+      'nature',
+      'city',
+      'food',
+      'travel',
+      'art',
+      'people',
+      'technology',
+      'animals',
+    ];
+    // const getTagsData = await GetListTags();
+    setTags(defaultTags.concat([]));
+    const initialData = mapTagsData(defaultTags, 50);
+    setImages(initialData);
+    setDisplayedImages(initialData.slice(0, IMAGES_PER_PAGE));
+  };
 
   const loadMoreImages = () => {
     setLoading(true);

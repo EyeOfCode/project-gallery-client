@@ -51,6 +51,9 @@ export const TagsComponent: React.FC<TagsComponentProps> = ({
           #{tag}
         </button>
       ))}
+      <button className="px-4 py-2 rounded-full text-sm bg-gray-200 text-black hover:bg-green-300">
+        +
+      </button>
     </div>
   );
 };
