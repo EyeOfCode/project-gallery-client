@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   web:
     build:
@@ -22,7 +20,7 @@ services:
           '--no-verbose',
           '--tries=1',
           '--spider',
-          'http://localhost:3000',
+          'http://localhost:3100',
         ]
       interval: 30s
       timeout: 10s
