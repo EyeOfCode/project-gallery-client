@@ -1,4 +1,5 @@
 import { ImageData } from '@/app/interfaces/image.interface';
+import { ModalCreateTag } from '../modal';
 
 interface TagsComponentProps {
   tags: string[];
@@ -9,6 +10,7 @@ interface TagsComponentProps {
   images: ImageData[];
   imagesPerPage: number;
   handleTagClick: (tag: string) => void;
+  deletedTag: (id: string) => void;
 }
 
 export const TagsComponent: React.FC<TagsComponentProps> = ({
@@ -20,6 +22,7 @@ export const TagsComponent: React.FC<TagsComponentProps> = ({
   images,
   imagesPerPage,
   handleTagClick,
+  deletedTag,
 }) => {
   return (
     <div className="flex flex-wrap gap-2 mb-8">
@@ -39,21 +42,30 @@ export const TagsComponent: React.FC<TagsComponentProps> = ({
         ทั้งหมด
       </button>
       {tags.map((tag, index) => (
-        <button
+        <div
           key={`tag-${tag}-${index}`}
-          onClick={() => handleTagClick(tag)}
-          className={`px-4 py-2 rounded-full text-sm ${
-            selectedTag === tag
-              ? 'bg-green-500 text-black'
-              : 'bg-gray-200 text-black hover:bg-green-300'
-          }`}
+          className="flex items-center align-center"
         >
-          #{tag}
-        </button>
+          <button
+            key={`tag-${tag}-${index}`}
+            onClick={() => handleTagClick(tag)}
+            className={`px-4 py-2 rounded-l-full text-sm ${
+              selectedTag === tag
+                ? 'bg-green-500 text-black'
+                : 'bg-gray-200 text-black hover:bg-green-300'
+            }`}
+          >
+            #{tag}
+          </button>
+          <button
+            onClick={() => deletedTag(tag)}
+            className="px-2 py-2 font-bold rounded-r-full text-sm text-black bg-red-300 hover:bg-red-500"
+          >
+            x
+          </button>
+        </div>
       ))}
-      <button className="px-4 py-2 rounded-full text-sm bg-gray-200 text-black hover:bg-green-300">
-        +
-      </button>
+      <ModalCreateTag />
     </div>
   );
 };

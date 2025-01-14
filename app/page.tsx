@@ -5,14 +5,13 @@ import { ImageData } from './interfaces/image.interface';
 import { TagsComponent } from './components/tags';
 import { mapTagsData } from './utils/map_tags';
 import { GalleryComponent } from './components/gallery';
-import { GetListTags } from './service/tags.service';
+import { DeleteTag, GetListTags } from './service/tags.service';
 
 export default function Home() {
   const [images, setImages] = useState<ImageData[]>([]);
   const [displayedImages, setDisplayedImages] = useState<ImageData[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
   const IMAGES_PER_PAGE = parseInt(
@@ -22,10 +21,6 @@ export default function Home() {
   useEffect(() => {
     fetchTags();
   }, []);
-
-  useEffect(() => {
-    console.log(tags);
-  }, [tags]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -56,9 +51,13 @@ export default function Home() {
       'technology',
       'animals',
     ];
-    // const getTagsData = await GetListTags();
-    setTags(defaultTags.concat([]));
-    const initialData = mapTagsData(defaultTags, 50);
+    const getTagsData = await GetListTags();
+    const mapTagsList =
+      getTagsData?.data && getTagsData.data.length > 0
+        ? getTagsData.data.map((tag: { name: string }) => tag.name)
+        : [];
+    const tags = defaultTags.concat(mapTagsList);
+    const initialData = mapTagsData(tags, 50);
     setImages(initialData);
     setDisplayedImages(initialData.slice(0, IMAGES_PER_PAGE));
   };
@@ -95,6 +94,26 @@ export default function Home() {
     });
   };
 
+  const deletedTag = async (tag: string) => {
+    const res = await DeleteTag(tag);
+    if (!res.success) {
+      return;
+    }
+    setSelectedTag(null);
+    setPage(1);
+    fetchTags();
+  };
+
+  const createdTag = async (tag: string) => {
+    const res = await DeleteTag(tag);
+    if (!res.success) {
+      return;
+    }
+    setSelectedTag(null);
+    setPage(1);
+    fetchTags();
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <TagsComponent
@@ -106,6 +125,7 @@ export default function Home() {
         setPage={setPage}
         images={images}
         imagesPerPage={IMAGES_PER_PAGE}
+        deletedTag={deletedTag}
       />
 
       <GalleryComponent images={displayedImages} setTag={handleTagClick} />
