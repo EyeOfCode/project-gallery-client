@@ -1,6 +1,12 @@
 import { useState } from 'react';
 
-export const ModalCreateTag = () => {
+interface ModalCreateTagProps {
+  funcSubmit: (tag: string) => void;
+}
+
+export const ModalCreateTag: React.FC<ModalCreateTagProps> = ({
+  funcSubmit,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [tagName, setTagName] = useState('');
 
@@ -10,12 +16,12 @@ export const ModalCreateTag = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Add your API call here
-      console.log('Creating tag:', tagName);
-      closeModal();
+      funcSubmit(tagName);
     } catch (error) {
       console.error('Error creating tag:', error);
     }
+    setTagName('');
+    closeModal();
   };
 
   return (

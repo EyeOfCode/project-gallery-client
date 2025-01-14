@@ -5,7 +5,8 @@ import { ImageData } from './interfaces/image.interface';
 import { TagsComponent } from './components/tags';
 import { mapTagsData } from './utils/map_tags';
 import { GalleryComponent } from './components/gallery';
-import { DeleteTag, GetListTags } from './service/tags.service';
+import { CreateTag, DeleteTag, GetListTags } from './service/tags.service';
+import { defaultTags } from './constants/default_tag';
 
 export default function Home() {
   const [images, setImages] = useState<ImageData[]>([]);
@@ -41,16 +42,6 @@ export default function Home() {
   }, [loading, selectedTag, images]);
 
   const fetchTags = async () => {
-    const defaultTags = [
-      'nature',
-      'city',
-      'food',
-      'travel',
-      'art',
-      'people',
-      'technology',
-      'animals',
-    ];
     const getTagsData = await GetListTags();
     const mapTagsList =
       getTagsData?.data && getTagsData.data.length > 0
@@ -105,7 +96,7 @@ export default function Home() {
   };
 
   const createdTag = async (tag: string) => {
-    const res = await DeleteTag(tag);
+    const res = await CreateTag(tag);
     if (!res.success) {
       return;
     }
@@ -126,6 +117,7 @@ export default function Home() {
         images={images}
         imagesPerPage={IMAGES_PER_PAGE}
         deletedTag={deletedTag}
+        createdTag={createdTag}
       />
 
       <GalleryComponent images={displayedImages} setTag={handleTagClick} />
